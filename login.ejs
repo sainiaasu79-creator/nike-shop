@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nike Admin Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-neutral-900 min-h-screen flex items-center justify-center text-white">
+    <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10 w-96 text-center shadow-2xl">
+        <h2 class="text-3xl font-black mb-2">Nike Admin</h2>
+        <p class="text-xs opacity-60 mb-6">Control Center Authentication</p>
+        <form action="/admin/login" method="POST" class="flex flex-col gap-4 text-black">
+            <input type="text" name="username" placeholder="Username" required class="p-3 rounded-xl bg-white/10 border border-white/10 text-white placeholder-white/50 focus:outline-none">
+            <input type="password" name="password" placeholder="Password" required class="p-3 rounded-xl bg-white/10 border border-white/10 text-white placeholder-white/50 focus:outline-none">
+            <button type="submit" class="bg-white text-black font-bold p-3 rounded-xl hover:bg-neutral-200 transition">Login</button>
+        </form>
+    </div>
+</body>
+</html>

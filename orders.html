@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Concept Store - My Orders (मेरे ऑर्डर)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            overflow-x: hidden;
+        }
+        .bg-gradient-theme {
+            background: radial-gradient(circle at center, #E45114 0%, #BC3604 100%);
+        }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .order-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+        .order-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .input-field {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-theme min-h-screen w-full flex flex-col justify-between p-4 md:p-8 text-white relative">
+
+    <div id="error-popup" class="fixed inset-0 bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none z-[300] flex items-center justify-center transition-all duration-300">
+        <div class="glassmorphism max-w-sm w-full mx-4 p-6 rounded-3xl text-center border border-red-500/30">
+            <div class="text-5xl mb-3">❌</div>
+            <h2 class="text-lg font-bold text-white">Action Failed</h2>
+            <p id="error-popup-message" class="text-sm text-white/70 mt-2">Something went wrong. Please try again.</p>
+            <button id="close-error-popup" class="mt-5 w-full py-3 bg-red-600 rounded-xl font-bold hover:bg-red-700 transition">OK</button>
+        </div>
+    </div>
+
+    <div id="unique-popup-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none z-[200] flex items-center justify-center p-4 transition-all duration-300">
+        <div id="popup-box" class="glassmorphism max-w-sm w-full p-6 rounded-3xl border border-red-500/30 text-center flex flex-col items-center gap-4 shadow-2xl transform scale-95 transition-all">
+            
+            <div id="cancel-step-confirm" class="w-full flex flex-col items-center gap-4">
+                <div class="w-14 h-14 bg-red-500/20 text-red-400 rounded-full flex items-center justify-center text-2xl font-bold border border-red-500/40 animate-pulse">⚠️</div>
+                <div>
+                    <h3 class="text-lg font-bold tracking-tight text-white">Confirm Cancellation?</h3>
+                    <p class="text-xs opacity-80 mt-1.5 leading-relaxed">Kya aap sach me is order ko cancel karna chahte hain? Ek baar cancel hone par ye process reverse nahi hogi.</p>
+                </div>
+                <div class="flex gap-3 w-full mt-2">
+                    <button id="back-confirm-btn" class="flex-1 py-2.5 bg-white/10 text-white text-xs font-bold uppercase rounded-xl hover:bg-white/20 transition">No, Go Back</button>
+                    <button id="next-reason-btn" class="flex-1 py-2.5 bg-red-600 text-white text-xs font-bold uppercase rounded-xl hover:bg-red-700 transition">Yes, Cancel</button>
+                </div>
+            </div>
+
+            <div id="cancel-step-reason" class="w-full flex flex-col items-center gap-4 hidden">
+                <div class="w-12 h-12 bg-white/10 text-white rounded-full flex items-center justify-center text-xl font-bold border border-white/20">📋</div>
+                <div class="w-full">
+                    <h3 class="text-base font-bold tracking-tight text-white">Cancellation Reason</h3>
+                    <p class="text-[11px] opacity-60 mt-0.5">Kripya order cancel karne ka karan chunein:</p>
+                </div>
+                
+                <div id="reasons-radio-group" class="w-full flex flex-col gap-2 text-left"></div>
+
+                <div id="another-reason-container" class="w-full hidden mt-1">
+                    <input type="text" id="custom-reason-input" placeholder="Type your reason here..." class="input-field p-2.5 rounded-xl text-xs w-full" />
+                </div>
+
+                <div class="flex gap-3 w-full mt-2">
+                    <button id="close-popup-btn" class="flex-1 py-2.5 bg-white/10 text-white text-xs font-bold uppercase rounded-xl hover:bg-white/20 transition">Abort</button>
+                    <button id="final-submit-cancel-btn" class="flex-1 py-2.5 bg-white text-black text-xs font-bold uppercase rounded-xl hover:bg-neutral-100 transition active:scale-95">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="w-full flex justify-between items-center z-10 relative max-w-4xl mx-auto mb-6">
+        <div class="flex items-center gap-3">
+            <a href="shop.html" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-sm hover:bg-white/20 transition">←</a>
+            <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">My Orders <span class="text-base font-normal text-neutral-300">(मेरे ऑर्डर)</span></h1>
+        </div>
+        <nav class="glassmorphism px-4 py-1.5 rounded-full flex gap-4 text-xs font-medium">
+            <a href="index.html" class="hover:opacity-70 opacity-60 transition">Home</a>
+            <a href="shop.html" class="hover:opacity-70 opacity-60 transition">Shop</a>
+        </nav>
+    </header>
+
+    <main class="w-full flex-grow z-10 max-w-4xl mx-auto flex flex-col gap-4">
+        
+        <div class="w-full flex gap-3 items-center">
+            <div class="relative flex-grow">
+                <input 
+                    type="text" 
+                    id="order-search-input" 
+                    placeholder="Search items by name... (ऑर्डर सर्च करें)" 
+                    class="w-full px-4 py-2.5 pl-10 rounded-xl bg-white/10 border border-white/20 text-white text-xs placeholder-white/50 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all"
+                />
+                <span class="absolute left-3 top-3 text-white/40 text-xs">🔍</span>
+            </div>
+            
+            <button id="open-filter-btn" class="glassmorphism px-4 py-2.5 rounded-xl text-xs font-semibold hover:bg-white/20 transition-all flex items-center gap-1.5 whitespace-nowrap">
+                <span>⚡</span> <span class="text-yellow-300 font-bold">Filters</span>
+            </button>
+        </div>
+
+        <hr class="border-white/10 my-1">
+
+        <div id="orders-container" class="flex flex-col gap-3">
+            <div class="text-center py-12"><p class="text-xs opacity-50">Loading live database logs...</p></div>
+        </div>
+    </main>
+
+    <div id="filter-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none z-50 flex items-end justify-center transition-all duration-400">
+        <div id="filter-sheet" class="glassmorphism w-full max-w-md rounded-t-3xl border-t border-white/20 p-6 flex flex-col gap-4 shadow-2xl translate-y-full transition-transform duration-400">
+            
+            <div class="flex justify-between items-center pb-2 border-b border-white/10">
+                <h2 class="text-base font-bold text-white flex items-center gap-1">Filter By Status</h2>
+                <button id="close-filter" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center font-bold">✕</button>
+            </div>
+
+            <div class="flex flex-col gap-3 max-h-[50vh] overflow-y-auto pr-2">
+                <div class="flex flex-col gap-2.5">
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs group">
+                        <span class="flex items-center gap-2">🌐 All (सभी)</span>
+                        <input type="radio" name="status-filter" value="all" checked class="accent-purple-500 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs group">
+                        <span class="flex items-center gap-2">⏳ Ordered (पेंडिंग)</span>
+                        <input type="radio" name="status-filter" value="ordered" class="accent-purple-500 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs group">
+                        <span class="flex items-center gap-2">✅ Accepted (मंज़ूर)</span>
+                        <input type="radio" name="status-filter" value="accepted" class="accent-purple-500 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs group">
+                        <span class="flex items-center gap-2">🚚 Shipped (भेज दिया)</span>
+                        <input type="radio" name="status-filter" value="shipped" class="accent-purple-500 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs group">
+                        <span class="flex items-center gap-2">🎉 Delivered (डिलीवर)</span>
+                        <input type="radio" name="status-filter" value="delivered" class="accent-purple-500 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs group">
+                        <span class="flex items-center gap-2">❌ Cancelled (रद्द)</span>
+                        <input type="radio" name="status-filter" value="cancelled" class="accent-purple-500 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-xs group">
+                        <span class="flex items-center gap-2">🚫 Rejected (अस्वीकृत)</span>
+                        <input type="radio" name="status-filter" value="rejected" class="accent-purple-500 w-4 h-4">
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-2 pt-2 border-t border-white/10">
+                <button id="clear-filter-btn" class="py-2.5 border border-white/30 text-white font-bold text-xs rounded-xl hover:bg-white/10 transition">Clear (क्लियर)</button>
+                <button id="apply-filter-btn" class="py-2.5 bg-white text-black font-bold text-xs rounded-xl hover:bg-neutral-200 transition">Apply (लागू करें)</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w-full flex justify-between text-[9px] tracking-widest uppercase opacity-40 z-10 pt-6 max-w-4xl mx-auto">
+        <div>© 2026 Nike, Inc.</div>
+        <div>Orders Hub View</div>
+    </footer>
+
+    <script>
+        // API Base URL Setup
+        const API_BASE_URL = window.location.origin.includes(':5173') 
+            ? window.location.origin.replace(':5173', ':3000') 
+            : window.location.origin;
+
+        let backendOrders = [];
+        let activeFilter = 'all';
+        let currentTargetCancelOrderId = null;
+
+        const randomReasonsPool = [
+            "Order placed by mistake (गलती से ऑर्डर हो गया).",
+            "Found a better price elsewhere (कहीं और सस्ता मिल गया).",
+            "Expected delivery timeline is too long (डिलीवरी में समय लग रहा है).",
+            "Incorrect size selected (गलत साइज़ चुना गया).",
+            "Delivery address needs to be changed (पता बदलना है)."
+        ];
+
+        const ordersContainer = document.getElementById('orders-container');
+        const searchInput = document.getElementById('order-search-input');
+        const filterModal = document.getElementById('filter-modal');
+        const filterSheet = document.getElementById('filter-sheet');
+        const openFilterBtn = document.getElementById('open-filter-btn');
+        const closeFilter = document.getElementById('close-filter');
+        const applyFilterBtn = document.getElementById('apply-filter-btn');
+        const clearFilterBtn = document.getElementById('clear-filter-btn');
+
+        const uniquePopupModal = document.getElementById('unique-popup-modal');
+        const popupBox = document.getElementById('popup-box');
+        const cancelStepConfirm = document.getElementById('cancel-step-confirm');
+        const cancelStepReason = document.getElementById('cancel-step-reason');
+        const backConfirmBtn = document.getElementById('back-confirm-btn');
+        const nextReasonBtn = document.getElementById('next-reason-btn');
+        const closePopupBtn = document.getElementById('close-popup-btn');
+        const finalSubmitCancelBtn = document.getElementById('final-submit-cancel-btn');
+        const reasonsRadioGroup = document.getElementById('reasons-radio-group');
+        const anotherReasonContainer = document.getElementById('another-reason-container');
+        const customReasonInput = document.getElementById('custom-reason-input');
+        const errorPopup = document.getElementById("error-popup");
+        const errorPopupMessage = document.getElementById("error-popup-message");
+        const closeErrorPopup = document.getElementById("close-error-popup");
+
+        function triggerCancelFlow(orderId) {
+            currentTargetCancelOrderId = orderId;
+            const shuffled = [...randomReasonsPool].sort(() => 0.5 - Math.random()).slice(0, 3);
+            
+            let reasonsHtml = '';
+            shuffled.forEach((reason, index) => {
+                reasonsHtml += `
+                    <label class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-[11px] hover:bg-white/10 transition">
+                        <input type="radio" name="cancel-reason-option" value="${reason}" ${index === 0 ? 'checked' : ''} onclick="document.getElementById('another-reason-container').classList.add('hidden')" class="w-3.5 h-3.5 accent-red-500">
+                        <span>${reason}</span>
+                    </label>
+                `;
+            });
+            reasonsHtml += `
+                <label class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-[11px] hover:bg-white/10 transition">
+                    <input type="radio" name="cancel-reason-option" value="another" id="radio-another-option" onclick="document.getElementById('another-reason-container').classList.remove('hidden'); document.getElementById('custom-reason-input').focus();" class="w-3.5 h-3.5 accent-red-500">
+                    <span class="text-yellow-400 font-bold">Another Reason (अन्य कारण)</span>
+                </label>
+            `;
+            
+            reasonsRadioGroup.innerHTML = reasonsHtml;
+            customReasonInput.value = '';
+            anotherReasonContainer.classList.add('hidden');
+            cancelStepConfirm.classList.remove('hidden');
+            cancelStepReason.classList.add('hidden');
+            uniquePopupModal.classList.remove('opacity-0', 'pointer-events-none');
+            gsap.fromTo(popupBox, { scale: 0.8 }, { scale: 1, duration: 0.3, ease: "back.out(1.5)" });
+        }
+
+        function closePopup() {
+            uniquePopupModal.classList.add('opacity-0', 'pointer-events-none');
+            currentTargetCancelOrderId = null;
+        }
+
+        function showErrorPopup(message) {
+            errorPopupMessage.textContent = message;
+            errorPopup.classList.remove("opacity-0", "pointer-events-none");
+            gsap.fromTo(errorPopup.firstElementChild, { scale: 0.8 }, { scale: 1, duration: 0.3, ease: "back.out(1.7)" });
+        }
+
+        closeErrorPopup.addEventListener("click", () => {
+            errorPopup.classList.add("opacity-0", "pointer-events-none");
+        });
+
+        backConfirmBtn.addEventListener('click', closePopup);
+        closePopupBtn.addEventListener('click', closePopup);
+        nextReasonBtn.addEventListener('click', () => {
+            cancelStepConfirm.classList.add('hidden');
+            cancelStepReason.classList.remove('hidden');
+            gsap.fromTo(cancelStepReason, { opacity: 0 }, { opacity: 1, duration: 0.25 });
+        });
+
+        async function fetchLiveOrders() {
+            try {
+                const user = JSON.parse(localStorage.getItem("orderUser") || "{}");
+                const customerName = user.name || localStorage.getItem("customerName") || "";
+                const customerPhone = user.mobile || user.phone || localStorage.getItem("customerPhone") || "";
+
+                const response = await fetch(`${API_BASE_URL}/api/user-orders?name=${encodeURIComponent(customerName)}&phone=${encodeURIComponent(customerPhone)}`);
+                
+                if (!response.ok) throw new Error("Failed to fetch orders");
+                const data = await response.json();
+                backendOrders = data.orders || [];
+                renderOrders(searchInput.value);
+            } catch (error) {
+                console.error("Failed to load orders:", error);
+                backendOrders = [];
+                ordersContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <p class="text-red-400 font-semibold">Failed to load orders.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleStatusTimeline(orderId) {
+            const timelineNode = document.getElementById(`timeline-${orderId}`);
+            if(timelineNode) {
+                if(timelineNode.classList.contains('hidden')) {
+                    timelineNode.classList.remove('hidden');
+                    gsap.fromTo(timelineNode, { opacity: 0, height: 0 }, { opacity: 1, height: 'auto', duration: 0.3 });
+                } else {
+                    gsap.to(timelineNode, { opacity: 0, height: 0, duration: 0.2, onComplete: () => timelineNode.classList.add('hidden') });
+                }
+            }
+        }
+
+        function renderOrders(filterText = '') {
+            ordersContainer.innerHTML = '';
+            
+            const filtered = backendOrders.filter(order => {
+                let firstItemTitle = '';
+                if(order.items && order.items.length > 0) {
+                    firstItemTitle = (order.items[0].title || order.items[0].name || '').toLowerCase();
+                } else if(order.title) {
+                    firstItemTitle = order.title.toLowerCase();
+                }
+                const customerName = (order.customerDetails?.name || '').toLowerCase();
+                
+                const matchesSearch = firstItemTitle.includes(filterText.toLowerCase()) || customerName.includes(filterText.toLowerCase());
+                const matchesStatus = (activeFilter === 'all' || order.status === activeFilter);
+                return matchesSearch && matchesStatus;
+            });
+
+            if (backendOrders.length === 0) {
+                ordersContainer.innerHTML = `
+                    <div class="text-center py-12 border border-white/10 rounded-2xl bg-white/5">
+                        <p class="text-base font-medium opacity-80">No orders yet</p>
+                        <p class="text-xs opacity-50 mt-1">(अभी तक कोई ऑर्डर नहीं है)</p>
+                        <a href="shop.html" class="inline-block mt-5 px-6 py-2 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-neutral-200 transition">Shop Now</a>
+                    </div>
+                `;
+                return;
+            }
+
+            if (filtered.length === 0) {
+                ordersContainer.innerHTML = `<p class="text-xs opacity-50 text-center py-12">No orders found matching filter. (कोई ऑर्डर नहीं मिला)</p>`;
+                return;
+            }
+
+            filtered.forEach(order => {
+                const uniqueId = order._id || order.id;
+                const wrapper = document.createElement('div');
+                wrapper.className = "flex flex-col gap-1 w-full";
+
+                // Status Mapping (Updated with accepted/rejected)
+                let statusText = 'Pending'; 
+                let statusClass = 'bg-yellow-500/80 text-white';
+                let currentStepIndex = 0; 
+                
+                if (order.status === 'delivered') { 
+                    statusText = 'Delivered'; statusClass = 'bg-green-600'; currentStepIndex = 3;
+                } else if (order.status === 'cancelled') { 
+                    statusText = 'Cancelled by You'; statusClass = 'bg-red-600/80'; currentStepIndex = -1;
+                } else if (order.status === 'rejected') { 
+                    statusText = 'Rejected by Admin'; statusClass = 'bg-red-800'; currentStepIndex = -1;
+                } else if (order.status === 'shipped') { 
+                    statusText = 'Shipped'; statusClass = 'bg-blue-600'; currentStepIndex = 1;
+                } else if (order.status === 'arriving_soon') {
+                    statusText = 'Arriving Soon'; statusClass = 'bg-orange-500'; currentStepIndex = 2;
+                } else if (order.status === 'accepted') {
+                    statusText = 'Order Accepted'; statusClass = 'bg-green-500/90'; currentStepIndex = 0;
+                } else { // ordered
+                    statusText = 'Processing...'; statusClass = 'bg-purple-500/90'; currentStepIndex = 0;
+                }
+
+                let itemTitle = 'Nike Product Asset';
+                let itemPrice = 0;
+                let itemQty = 1;
+                let itemSize = 'N/A';
+                let itemImageSrc = '';
+
+                if(order.items && order.items.length > 0) {
+                    itemTitle = order.items[0].title || order.items[0].productName || 'Nike Asset';
+                    itemPrice = parseFloat(order.items[0].price || 0);
+                    itemQty = order.items[0].quantity || 1;
+                    itemSize = order.items[0].size || 'N/A';
+                    itemImageSrc = order.items[0].image || ''; 
+                }
+
+                // Fix Image URL
+                if(itemImageSrc && !itemImageSrc.startsWith('http') && !itemImageSrc.startsWith('data:')) {
+                    if(!itemImageSrc.startsWith('/')) itemImageSrc = '/' + itemImageSrc;
+                    itemImageSrc = `${API_BASE_URL}${itemImageSrc}`;
+                }
+
+                const totalPaid = order.totalAmount ? parseFloat(order.totalAmount) : (itemPrice * itemQty);
+                const itemDate = order.date ? (isNaN(Date.parse(order.date)) ? order.date : new Date(order.date).toLocaleDateString()) : new Date().toLocaleDateString();
+
+                let imageHtmlLayout = `<div class="w-16 h-16 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl flex-shrink-0 select-none">👟</div>`;
+                if(itemImageSrc) {
+                    imageHtmlLayout = `
+                        <div class="w-16 h-16 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+                            <img src="${itemImageSrc}" alt="${itemTitle}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="hidden w-full h-full items-center justify-center text-3xl select-none bg-white/5">👟</div>
+                        </div>
+                    `;
+                }
+
+                // Show Reason for Cancelled OR Rejected
+                let reasonTextHtml = '';
+                if(order.status === 'cancelled' || order.status === 'rejected') {
+                    const trackingReason = order.cancellationReason || "No specific reason provided.";
+                    reasonTextHtml = `<p class="text-[10px] text-red-200 font-medium mt-1 bg-red-500/20 border border-red-500/30 px-2 py-1 rounded-md inline-block max-w-full truncate">Reason: ${trackingReason}</p>`;
+                }
+
+                // Timeline logic
+                let timelineHtml = '';
+                if(currentStepIndex >= 0) {
+                    const steps = ["Packed", "Shipped", "Arriving", "Delivered"];
+                    let stepsLayout = '';
+                    steps.forEach((step, idx) => {
+                        const isCompleted = idx <= currentStepIndex;
+                        stepsLayout += `
+                            <div class="flex flex-col items-center flex-1 relative">
+                                <div class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${isCompleted ? 'bg-white text-black shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-white/10 text-white/40 border border-white/20'} z-10 transition-all">
+                                    ${isCompleted ? '✓' : idx + 1}
+                                </div>
+                                <span class="text-[9px] mt-1.5 font-semibold text-center ${isCompleted ? 'text-white font-bold' : 'opacity-40'}">${step}</span>
+                            </div>
+                        `;
+                    });
+
+                    timelineHtml = `
+                        <div id="timeline-${uniqueId}" class="hidden w-full glassmorphism p-4 rounded-xl mt-1 border border-white/10 flex flex-col gap-2">
+                            <p class="text-[10px] uppercase font-bold tracking-widest text-neutral-300">Live Delivery Tracker</p>
+                            <div class="flex items-center justify-between mt-2 relative w-full px-4">
+                                <div class="absolute top-2.5 left-8 right-8 h-[2px] bg-white/10 z-0"></div>
+                                <div class="absolute top-2.5 left-8 h-[2px] bg-white z-0 transition-all duration-500" style="width: ${(currentStepIndex / 3) * 82}%;"></div>
+                                ${stepsLayout}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // For cancelled/rejected
+                    timelineHtml = `
+                        <div id="timeline-${uniqueId}" class="hidden w-full glassmorphism p-4 rounded-xl mt-1 border border-red-500/30 bg-red-500/10 text-center">
+                            <p class="text-xs text-red-300 font-bold uppercase tracking-wider">${order.status === 'rejected' ? 'Order Rejected by Store' : 'Order Cancelled by You'}</p>
+                        </div>
+                    `;
+                }
+
+                // CANCEL BUTTON LOGIC UPDATED
+                // User can only cancel if it is 'ordered' or 'accepted'
+                const canCancel = (order.status === 'ordered' || order.status === 'accepted');
+
+                wrapper.innerHTML = `
+                    <div onclick="toggleStatusTimeline('${uniqueId}')" class="order-card p-3.5 rounded-2xl flex items-center justify-between gap-3 relative cursor-pointer select-none">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            ${imageHtmlLayout}
+                            <div class="overflow-hidden">
+                                <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${statusClass}">
+                                    ${statusText}
+                                </span>
+                                <h3 class="text-sm font-bold mt-1 text-white truncate w-40 sm:w-auto">${itemTitle} <span class="text-xs font-normal text-white/50">(Size: ${itemSize})</span></h3>
+                                <p class="text-[10px] opacity-70 mt-0.5 text-neutral-300">Date: ${itemDate}</p>
+                                <p class="text-[10px] opacity-50 mt-0.5">Qty: ${itemQty} • ₹${itemPrice.toFixed(2)}</p>
+                                ${reasonTextHtml}
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col items-end gap-2 flex-shrink-0">
+                            <span class="text-sm font-bold text-yellow-400">₹${totalPaid.toFixed(2)}</span>
+                            ${canCancel ? `
+                                <button onclick="event.stopPropagation(); triggerCancelFlow('${uniqueId}')" class="px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase border border-red-400/50 bg-red-500/10 text-red-300 rounded-lg hover:bg-red-500 hover:text-white transition-all active:scale-95">
+                                    Cancel
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    ${timelineHtml}
+                `;
+                ordersContainer.appendChild(wrapper);
+            });
+        }
+
+        finalSubmitCancelBtn.addEventListener('click', async () => {
+            if(!currentTargetCancelOrderId) return;
+            const selectedRadio = document.querySelector('input[name="cancel-reason-option"]:checked');
+            let chosenReason = selectedRadio ? selectedRadio.value : "User requested cancellation.";
+
+            if (chosenReason === 'another') {
+                const typedText = customReasonInput.value.trim();
+                if(typedText.length < 4) {
+                    gsap.fromTo(customReasonInput, {x: -6}, {x: 0, duration: 0.05, repeat: 4, yoyo: true});
+                    return;
+                }
+                chosenReason = typedText;
+            }
+
+            const orderId = currentTargetCancelOrderId;
+            const user = JSON.parse(localStorage.getItem("orderUser") || "{}");
+            const customerName = user.name || localStorage.getItem("customerName") || "";
+            const customerPhone = user.mobile || user.phone || localStorage.getItem("customerPhone") || "";
+
+            closePopup();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/orders/cancel/${orderId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        reason: chosenReason,
+                        name: customerName,
+                        phone: customerPhone
+                    })
+                });
+
+                if (response.ok) {
+                    await fetchLiveOrders();
+                } else {
+                    showErrorPopup("Unable to cancel the order.");
+                }
+            } catch (err) {
+                console.error("Cancel failed:", err);
+                showErrorPopup("Unable to cancel the order. Network Error.");
+            } 
+        });
+
+        openFilterBtn.addEventListener('click', () => {
+            filterModal.classList.remove('opacity-0', 'pointer-events-none');
+            filterSheet.classList.remove('translate-y-full');
+        });
+
+        function closeFilterModal() {
+            filterSheet.classList.add('translate-y-full');
+            setTimeout(() => { filterModal.classList.add('opacity-0', 'pointer-events-none'); }, 300);
+        }
+
+        closeFilter.addEventListener('click', closeFilterModal);
+        
+        applyFilterBtn.addEventListener('click', () => {
+            const selectedRadio = document.querySelector('input[name="status-filter"]:checked');
+            if(selectedRadio) {
+                activeFilter = selectedRadio.value;
+                renderOrders(searchInput.value);
+            }
+            closeFilterModal();
+        });
+
+        clearFilterBtn.addEventListener('click', () => {
+            document.querySelector('input[name="status-filter"][value="all"]').checked = true;
+            activeFilter = 'all';
+            renderOrders(searchInput.value);
+            closeFilterModal();
+        });
+
+        searchInput.addEventListener('input', (e) => { renderOrders(e.target.value); });
+
+        // Initial Fetch
+        fetchLiveOrders();
+    </script>
+</body>
+</html>

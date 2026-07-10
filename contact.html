@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Concept Store - Contact Us</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .bg-gradient-theme {
+            background: radial-gradient(circle at center, #E45114 0%, #BC3604 100%);
+            transition: background 0.8s ease-in-out;
+        }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .input-field {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-theme min-h-screen w-full flex flex-col justify-between p-4 md:p-8 text-white relative overflow-x-hidden">
+
+    <div class="absolute inset-0 flex justify-center items-center pointer-events-none opacity-5 select-none z-0">
+        <svg class="w-[90%] md:w-[70%] h-auto fill-white" viewBox="0 0 24 24">
+            <path d="M21 6.5c-2.3 1.8-6.1 4.7-10.7 7.7-2.6 1.7-5.1 3.2-7.1 4.4-1.2.7-2.2 1.2-2.7 1.4-.3.1-.4.1-.5 0 0 0-.1-.1 0-.2.2-.6.7-1.7 1.5-3.3 1.7-3.4 4.5-8.2 8-12.7 1.4-1.8 2.8-3.1 3.9-3.7.8-.4 1.4-.4 1.7-.1.4.4.3 1.3-.3 2.6-1 2.2-3.1 5.4-5.6 8.7 3.9-2.2 8-4.3 11.5-5.6 1.3-.5 2.4-.8 3.1-.8.5 0 .8.2.9.5.1.4-.2 1.1-.7 1.7z"/>
+        </svg>
+    </div>
+
+    <header class="w-full flex flex-col sm:flex-row justify-between items-center z-10 gap-4 mb-6 lg:mb-0">
+        <div class="w-12 h-auto fill-white cursor-pointer">
+            <svg viewBox="0 0 24 24"><path d="M21 6.5c-2.3 1.8-6.1 4.7-10.7 7.7-2.6 1.7-5.1 3.2-7.1 4.4-1.2.7-2.2 1.2-2.7 1.4-.3.1-.4.1-.5 0 0 0-.1-.1 0-.2.2-.6.7-1.7 1.5-3.3 1.7-3.4 4.5-8.2 8-12.7 1.4-1.8 2.8-3.1 3.9-3.7.8-.4 1.4-.4 1.7-.1.4.4.3 1.3-.3 2.6-1 2.2-3.1 5.4-5.6 8.7 3.9-2.2 8-4.3 11.5-5.6 1.3-.5 2.4-.8 3.1-.8.5 0 .8.2.9.5.1.4-.2 1.1-.7 1.7z"/></svg>
+        </div>
+        
+        <nav class="glassmorphism px-4 py-1.5 md:px-6 md:py-2 rounded-full flex gap-4 md:gap-6 text-xs md:text-sm font-medium whitespace-nowrap">
+            <a href="index.html" class="hover:opacity-70 transition opacity-60">Home</a>
+            <button id="nav-about" class="hover:opacity-70 transition opacity-60">About</button>
+            <a href="shop.html" class="hover:opacity-70 transition opacity-60">Shop</a>
+            <a href="contact.html" class="hover:opacity-70 transition font-bold opacity-100">Contact</a>
+        </nav>
+
+        <div class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center border border-white/20 cursor-pointer transition-all duration-300 shadow-md group relative">
+            <svg class="w-5 h-5 stroke-white fill-none stroke-[2] group-hover:scale-105 transition-transform" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="absolute -top-1 -right-1 w-4 h-4 bg-white text-black font-bold text-[9px] rounded-full flex items-center justify-center scale-90">0</span>
+        </div>
+    </header>
+
+    <main class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-grow z-10 my-6 max-w-7xl mx-auto px-2">
+        
+        <div class="col-span-1 lg:col-span-5 flex flex-col gap-6 w-full text-center lg:text-left">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">Connect With Us</h1>
+                <p class="text-xs opacity-60 tracking-wider">Follow or chat with us directly on our official social handles.</p>
+            </div>
+
+            <div class="flex flex-col gap-3 text-left">
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4">
+                    <span class="text-xl">📍</span>
+                    <div>
+                        <h4 class="text-[10px] md:text-xs font-bold uppercase opacity-50">Our Flagship Hub</h4>
+                        <p class="text-xs md:text-sm font-medium">Nike Bowerman Dr, Beaverton, OR 97005, USA</p>
+                    </div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4">
+                    <span class="text-xl">📞</span>
+                    <div>
+                        <h4 class="text-[10px] md:text-xs font-bold uppercase opacity-50">Call Assistance</h4>
+                        <p class="text-xs md:text-sm font-medium">+1 (503) 671-6453</p>
+                    </div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4">
+                    <span class="text-xl">✉️</span>
+                    <div>
+                        <h4 class="text-[10px] md:text-xs font-bold uppercase opacity-50">Official Mail</h4>
+                        <p class="text-xs md:text-sm font-medium">capsule.support@nike.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glassmorphism p-6 rounded-2xl border border-white/10 flex flex-col gap-4">
+                <h3 class="text-xs font-bold uppercase tracking-widest opacity-60 text-center lg:text-left">Our Social Channels</h3>
+                <div class="flex justify-center lg:justify-start gap-6 items-center">
+                    
+                    <a href="https://wa.me/15036716453" target="_blank" class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-emerald-600/20 hover:border-emerald-500 transition-all duration-300 group shadow-lg">
+                        <svg class="w-7 h-7 fill-white group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.66.986 3.288 1.498 4.86 1.499 5.452 0 9.887-4.43 9.89-9.885.002-2.643-1.03-5.126-2.905-7s-4.368-2.91-7.01-2.91c-5.451 0-9.887 4.431-9.89 9.886-.001 1.751.481 3.42 1.393 4.83l-.999 3.649 3.753-.984zM17.487 14.4c-.27-.133-1.594-.783-1.84-.873-.246-.09-.425-.133-.604.135-.179.268-.694.873-.851 1.052-.157.18-.314.201-.584.067-2.34-1.153-3.856-2.317-5.405-4.975-.402-.692.402-.643 1.15-2.143.12-.241.06-.453-.03-.626-.09-.173-.757-1.826-1.037-2.5-.27-.652-.547-.563-.749-.574l-.638-.01c-.246 0-.648.092-.987.464-.34.371-1.299 1.27-1.299 3.098 0 1.827 1.33 3.592 1.515 3.841.185.25 2.616 3.996 6.333 5.603.885.383 1.574.611 2.11.782.889.283 1.697.243 2.336.147.712-.107 2.18-.892 2.485-1.756.304-.863.304-1.603.213-1.756-.09-.153-.33-.243-.6-.376z"/>
+                        </svg>
+                    </a>
+
+                    <a href="instagram://user?username=nike" data-fallback="https://instagram.com/nike" onclick="openSocialLink(event, this)" class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-pink-600/20 hover:border-pink-500 transition-all duration-300 group shadow-lg">
+                        <svg class="w-7 h-7 fill-white group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                        </svg>
+                    </a>
+
+                    <a href="fb://facewebmodal/f?href=https://facebook.com/nike" data-fallback="https://facebook.com/nike" onclick="openSocialLink(event, this)" class="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600/20 hover:border-blue-500 transition-all duration-300 group shadow-lg">
+                        <svg class="w-7 h-7 fill-white group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-1 lg:col-span-7 h-[280px] sm:h-[360px] lg:h-[450px] w-full rounded-3xl overflow-hidden glassmorphism p-2 border border-white/20 relative shadow-2xl">
+            <iframe 
+                class="w-full h-full rounded-2xl border-none opacity-85 hover:opacity-100 transition duration-500 invert-[90%] hue-rotate-[180deg] brightness-[95%] contrast-[90%]"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2836.4674311145113!2d-122.82987162341253!3d45.51034442978051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x549509df6eb142b7%3A0xe541996fc2c97486!2sNike%20World%20Headquarters!5e0!3m2!1sen!2sin!4v1719133400000!5m2!1sen!2sin" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+    </main>
+
+    <footer class="w-full flex flex-col sm:flex-row justify-between items-center text-[9px] md:text-[10px] tracking-widest uppercase opacity-40 z-10 gap-2 text-center sm:text-left mt-6 lg:mt-0">
+        <div>© 2026 Nike, Inc. All Rights Reserved</div>
+        <div>Designed & Developed with Style</div>
+    </footer>
+
+    <div class="fixed sm:absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4 z-20 bg-black/20 px-4 py-2 rounded-full backdrop-blur-md sm:bg-transparent sm:p-0">
+        <button class="w-6 h-6 rounded-full bg-[#BC3604] border border-white/40 hover:scale-110 transition" data-gradient="radial-gradient(circle at center, #E45114 0%, #BC3604 100%)"></button>
+        <button class="w-6 h-6 rounded-full bg-[#2B2C20] border border-white/40 hover:scale-110 transition" data-gradient="radial-gradient(circle at center, #4A4B3A 0%, #2B2C20 100%)"></button>
+        <button class="w-6 h-6 rounded-full bg-[#433663] border border-white/40 hover:scale-110 transition" data-gradient="radial-gradient(circle at center, #7E6CA8 0%, #433663 100%)"></button>
+    </div>
+
+    <script>
+        function openSocialLink(event, anchor) {
+            event.preventDefault();
+            const appUrl = anchor.getAttribute('href');
+            const webUrl = anchor.getAttribute('data-fallback');
+            
+            // PWA / App directly try karne ke liye time threshold window setup
+            const start = Date.now();
+            window.location.href = appUrl;
+            
+            setTimeout(() => {
+                if (Date.now() - start < 1500) {
+                    window.open(webUrl, '_blank');
+                }
+            }, 1000);
+        }
+
+        const colorNodes = document.querySelectorAll('[data-gradient]');
+        colorNodes.forEach(node => {
+            node.addEventListener('click', () => {
+                const targetGradient = node.getAttribute('data-gradient');
+                gsap.to('body', { background: targetGradient, duration: 0.6, ease: "power2.out" });
+            });
+        });
+    </script>
+</body>
+</html>
