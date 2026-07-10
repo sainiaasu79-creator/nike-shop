@@ -57,7 +57,7 @@ app.use(session({
 }));
 
 // MongoDB Connection
-mongoose.connect('mongodb://127.0.0.1:27017/nike_store')
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('✓ MongoDB Connected Successfully!'))
     .catch(err => console.error('MongoDB Connection Error:', err));
 
@@ -92,6 +92,8 @@ const orderSchema = new mongoose.Schema({
 
 const Order = mongoose.model('Order', orderSchema);
 
+const ADMIN_USER = process.env.ADMIN_USER;
+const ADMIN_PASS = process.env.ADMIN_PASS;
 
 // Middleware to protect routes
 const isAdmin = (req, res, next) => {
