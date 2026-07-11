@@ -47,7 +47,7 @@ const upload = multer({ storage: storage });
 
 // EJS Template Configuration
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', __dirname);
 
 // Secure Session
 app.use(session({
