@@ -57,7 +57,9 @@ app.use(session({
 }));
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
+// पुराना कोड हटाकर ये लिखें:
+const dbURI = process.env.MONGODB_URI || "यहाँ अपनी MongoDB Atlas वाली पूरी URL पेस्ट कर दें";
+mongoose.connect(dbURI)
     .then(() => console.log('✓ MongoDB Connected Successfully!'))
     .catch(err => console.error('MongoDB Connection Error:', err));
 
