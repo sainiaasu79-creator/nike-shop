@@ -19,8 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: [
-        "http://localhost:5173",
-        "http://10.145.237.63:5173"
+       "nike-shop-jet.vercel.app"
     ],
     credentials: true
 }));
