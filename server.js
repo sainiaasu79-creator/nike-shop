@@ -17,9 +17,11 @@ const app = express();
 // Middlewares - Must be before routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const cors = require('cors');
+
 app.use(cors({
     origin: [
-       "https://sainiaasu79-creator.github.io/nike-shop/"
+        "https://sainiaasu79-creator.github.io/nike-shop", 
     ],
     credentials: true
 }));
