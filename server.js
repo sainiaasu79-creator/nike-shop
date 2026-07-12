@@ -21,7 +21,7 @@ const cors = require('cors');
 
 app.use(cors({
     origin: [
-        "https://sainiaasu79-creator.github.io/nike-shop", 
+        "https://sainiaasu79-creator.github.io/nike-shop"
     ],
     credentials: true
 }));
