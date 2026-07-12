@@ -31,7 +31,7 @@ app.use(cors({
 }));
 
 // Pre-flight request handling
-app.options('*', cors());
+app.all('*', cors());
 
 // 📦 Uploads directory configuration
 const uploadDir = path.join(__dirname, 'public/uploads');
