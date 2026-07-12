@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: [
-       "nike-shop-jet.vercel.app"
+       "https://sainiaasu79-creator.github.io/nike-shop/"
     ],
     credentials: true
 }));
