@@ -19,19 +19,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //const cors = require('cors');
 
-// CORS Configuration
 app.use(cors({
     origin: [
-        "https://sainiaasu79-creator.github.io",
         "https://sainiaasu79-creator.github.io/nike-shop"
     ],
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
-
-// Pre-flight request handling
-app.all('*', cors());
 
 // 📦 Uploads directory configuration
 const uploadDir = path.join(__dirname, 'public/uploads');
