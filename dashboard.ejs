@@ -298,19 +298,41 @@
                                     </td>
                                     
                                     <td class="py-3 px-4 text-white/80">
-                                        <div class="font-medium">
-                                            <% if(order.items && order.items.length > 0) { %>
-                                                <%= order.items[0].title || order.items[0].productName || order.items[0].name || 'Capsule Asset' %>
-                                            <% } else { %>
-                                                Capsule Asset
-                                            <% } %>
-                                        </div>
-                                        <div class="mt-1">
-                                            <span class="bg-white/10 border border-white/10 text-white px-2 py-0.5 rounded font-mono text-[10px]">
-                                                Size: <%= (order.items && order.items.length > 0 && order.items[0].size) ? order.items[0].size : 'N/A' %>
-                                            </span>
-                                        </div>
-                                    </td>
+    <div class="flex items-center gap-3">
+        <!-- Image Box -->
+        <% 
+            let orderItemImage = '';
+            if(order.items && order.items.length > 0) {
+                orderItemImage = order.items[0].image || order.items[0].imageUrl || order.items[0].img || '';
+            } else if (order.image || order.imageUrl) {
+                orderItemImage = order.image || order.imageUrl;
+            }
+        %>
+        <div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
+            <% if(orderItemImage) { %>
+                <img src="<%= orderItemImage %>" alt="Product" class="w-full h-full object-cover">
+            <% } else { %>
+                <span class="text-lg">👟</span>
+            <% } %>
+        </div>
+
+        <!-- Text Details -->
+        <div>
+            <div class="font-medium text-[11px] sm:text-xs">
+                <% if(order.items && order.items.length > 0) { %>
+                    <%= order.items[0].title || order.items[0].productName || order.items[0].name || 'Capsule Asset' %>
+                <% } else { %>
+                    Capsule Asset
+                <% } %>
+            </div>
+            <div class="mt-1">
+                <span class="bg-white/10 border border-white/10 text-white px-2 py-0.5 rounded font-mono text-[9px] sm:text-[10px]">
+                    Size: <%= (order.items && order.items.length > 0 && order.items[0].size) ? order.items[0].size : 'N/A' %>
+                </span>
+            </div>
+        </div>
+    </div>
+</td>
                                     
                                     <td class="py-3 px-4">
                                         <div class="font-semibold text-yellow-300">
