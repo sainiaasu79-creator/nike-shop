@@ -17,11 +17,11 @@ const app = express();
 // Middlewares - Must be before routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//const cors = require('cors');
 
+// --- FIXED CORS CONFIGURATION ---
 app.use(cors({
     origin: [
-        "https://sainiaasu79-creator.github.io/nike-shop"
+        "https://sainiaasu79-creator.github.io" // Path (/nike-shop) hata diya hai, ab ye bilkul sahi hai
     ],
     credentials: true
 }));
@@ -58,8 +58,7 @@ app.use(session({
 }));
 
 // MongoDB Connection
-// पुराना कोड हटाकर ये लिखें:
-const dbURI = process.env.MONGODB_URI || "यहाँ अपनी MongoDB Atlas वाली पूरी URL पेस्ट कर दें";
+const dbURI = process.env.MONGODB_URI || "यहाँ apni MongoDB Atlas wali URL paste karein agar env me nahi h";
 mongoose.connect(dbURI)
     .then(() => console.log('✓ MongoDB Connected Successfully!'))
     .catch(err => console.error('MongoDB Connection Error:', err));
@@ -189,7 +188,7 @@ app.post('/admin/add-product', isAdmin, upload.array('images', 5), async (req, r
     }
 });
 
-// 🛠️ NEW: एडमिन द्वारा ऑर्डर का स्टेटस अपडेट करने का API
+// 🛠️ Admin order status update API
 app.patch('/api/admin/orders/status/:id', isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
@@ -292,7 +291,7 @@ app.post('/api/orders', upload.single('paymentProof'), async (req, res) => {
     }
 });
 
-// 1. User orders endpoint 
+// User orders endpoint 
 app.get('/api/user-orders', async (req, res) => {
     try {
         const name = req.query.name;
@@ -328,7 +327,7 @@ app.get('/api/user-orders', async (req, res) => {
     }
 });
 
-// 2. User side se order cancel karne ka endpoint
+// User side se order cancel karne ka endpoint
 app.patch('/api/orders/cancel/:id', async (req, res) => {
     try {
         const { reason, name, phone } = req.body;
