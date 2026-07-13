@@ -6,8 +6,11 @@ import session from 'express-session';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer'; 
-import fs from 'fs';
 import { Product } from './product.js';
+
+// ☁️ Cloudinary Imports
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,23 +29,21 @@ app.use(cors({
     credentials: true
 }));
 
-// 📦 Uploads directory configuration
-const uploadDir = path.join(__dirname, 'public/uploads');
-if (!fs.existsSync(uploadDir)){
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+// ☁️ Cloudinary Configuration
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
-// 📦 Multer Disk Storage for Images (Products and Payment Proofs) - FIXED PATH
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        // Yahan path.join ka use kiya gaya hai taaki Render ko exact location mil sake
-        cb(null, path.join(__dirname, 'public/uploads'));
+// 📦 Cloudinary Storage Setup for Multer
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'nike_shop_products', // Cloudinary par is naam ka folder ban jayega
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+        transformation: [{ width: 800, height: 800, crop: 'limit' }] // Auto-resize option
     },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
 });
 
 const upload = multer({ storage: storage });
@@ -128,7 +129,7 @@ app.get('/admin/delete-product/:id', isAdmin, async (req, res) => {
     }
 });
 
-// Admin Dashboard - Real orders model mapping
+// Admin Dashboard
 app.get('/admin/dashboard', isAdmin, async (req, res) => {
     try {
         const products = await Product.find();
@@ -139,7 +140,7 @@ app.get('/admin/dashboard', isAdmin, async (req, res) => {
     }
 });
 
-// Add Product Route with Multiple Images support (max 5 images)
+// Add Product Route - FIXED FOR CLOUDINARY
 app.post('/admin/add-product', isAdmin, upload.array('images', 5), async (req, res) => {
     try {
         let { title, price, discount, gender, category, sizes, description } = req.body;
@@ -163,11 +164,12 @@ app.post('/admin/add-product', isAdmin, upload.array('images', 5), async (req, r
             else finalSizes = ['S', 'M', 'L', 'XL'];
         }
 
+        // Cloudinary full URLs access karne ke liye file.path ka use hota h
         let imagePaths = [];
         if (req.files && req.files.length > 0) {
-            imagePaths = req.files.map(file => `/uploads/${file.filename}`);
+            imagePaths = req.files.map(file => file.path); 
         } else {
-            imagePaths = ['/uploads/default.jpg'];
+            imagePaths = ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600']; // Premium global default shoe placeholder
         }
 
         const newProduct = new Product({
@@ -189,7 +191,7 @@ app.post('/admin/add-product', isAdmin, upload.array('images', 5), async (req, r
     }
 });
 
-// 🛠️ Admin order status update API
+// Admin order status update API
 app.patch('/api/admin/orders/status/:id', isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
@@ -247,11 +249,13 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
-// API POST ROUTE FOR CLIENT CHECKOUT WITH SCREENSHOT UPLOAD
+// CLIENT CHECKOUT WITH SCREENSHOT UPLOAD - FIXED FOR CLOUDINARY
 app.post('/api/orders', upload.single('paymentProof'), async (req, res) => {
     try {
         const { name, phone, mobile, state, district, city, pincode, pinCode, address, items, totalAmount, paymentMethod } = req.body;
-        const proofPath = req.file ? `/uploads/${req.file.filename}` : '';
+        
+        // Cloudinary returns secure URL in file.path
+        const proofPath = req.file ? req.file.path : '';
 
         let parsedItems = [];
         if (items) {
@@ -284,7 +288,7 @@ app.post('/api/orders', upload.single('paymentProof'), async (req, res) => {
         const newOrder = new Order(orderData);
         const savedOrder = await newOrder.save();
         
-        console.log("✓ New Order Received & Saved with Screenshot Proof:", savedOrder);
+        console.log("✓ New Order Saved via Cloudinary Proof Path:", savedOrder);
         res.status(201).json({ success: true, order: savedOrder });
     } catch (error) {
         console.error("Backend order save error:", error);
@@ -314,17 +318,9 @@ app.get('/api/user-orders', async (req, res) => {
         };
 
         const orders = await Order.find(queryCondition).sort({ date: -1 });
-
-        res.json({
-            success: true,
-            orders: orders
-        });
-        
+        res.json({ success: true, orders: orders });
     } catch (err) {
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
+        res.status(500).json({ success: false, error: err.message });
     }
 });
 
@@ -341,9 +337,6 @@ app.patch('/api/orders/cancel/:id', async (req, res) => {
         }
         if (!phone || !phone.trim()) {
             return res.status(400).json({ success: false, message: "Customer phone is required." });
-        }
-        if (reason && reason.trim().length > 300) {
-            return res.status(400).json({ success: false, message: "Cancellation reason is too long." });
         }
 
         const order = await Order.findOne({
@@ -370,7 +363,6 @@ app.patch('/api/orders/cancel/:id', async (req, res) => {
 
         await order.save();
         res.json({ success: true, order });
-
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
