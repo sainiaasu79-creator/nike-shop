@@ -353,7 +353,7 @@
                 if (order.status === 'delivered') { 
                     statusText = 'Delivered'; statusClass = 'bg-green-600'; currentStepIndex = 3;
                 } else if (order.status === 'cancelled') { 
-                    statusText = 'Cancelled by You'; statusClass = 'bg-red-600/80'; currentStepIndex = -1;
+                    statusText = 'Cancelled'; statusClass = 'bg-red-600/80'; currentStepIndex = -1;
                 } else if (order.status === 'rejected') { 
                     statusText = 'Rejected by Admin'; statusClass = 'bg-red-800'; currentStepIndex = -1;
                 } else if (order.status === 'shipped') { 
