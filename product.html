@@ -359,16 +359,17 @@ window.changeImage=function(index){
             });
         }
 
+        // Error fixed here by moving 'index' calculation to the top of the function
         function syncSliderDots(scroller) {
-document.querySelectorAll(".thumb").forEach((t,i)=>{
-
-    if(i===index)
-        t.classList.add("active");
-    else
-        t.classList.remove("active");
-
-});
             const index = Math.round(scroller.scrollLeft / scroller.clientWidth);
+            
+            document.querySelectorAll(".thumb").forEach((t,i)=>{
+                if(i===index)
+                    t.classList.add("active");
+                else
+                    t.classList.remove("active");
+            });
+            
             const dots = document.querySelectorAll('#slider-dots-container div');
             dots.forEach((dot, idx) => {
                 if(idx === index) {
