@@ -16,6 +16,31 @@
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
         select option { background-color: rgb(67, 54, 99); color: white; }
+
+        /* Custom Checkbox for Mobile Compatibility */
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        input[type="checkbox"]:checked {
+            background-color: white;
+            border-color: white;
+        }
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            color: black;
+            font-size: 12px;
+            font-weight: 900;
+            position: absolute;
+        }
     </style>
 </head>
 <body class="text-white min-h-screen relative overflow-x-hidden pb-12">
@@ -142,25 +167,25 @@
                     </div>
                     
                     <div id="shoe-sizes" class="grid grid-cols-4 gap-2 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="6" class="w-4 h-4 accent-white"> 6</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="7" class="w-4 h-4 accent-white"> 7</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="8" class="w-4 h-4 accent-white"> 8</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="9" class="w-4 h-4 accent-white"> 9</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="10" class="w-4 h-4 accent-white"> 10</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="6" class="w-4 h-4"> 6</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="7" class="w-4 h-4"> 7</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="8" class="w-4 h-4"> 8</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="9" class="w-4 h-4"> 9</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="10" class="w-4 h-4"> 10</label>
                     </div>
 
                     <div id="alpha-sizes" class="hidden grid grid-cols-4 gap-2 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="S" disabled class="w-4 h-4 accent-white"> S</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="M" disabled class="w-4 h-4 accent-white"> M</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="L" disabled class="w-4 h-4 accent-white"> L</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="XL" disabled class="w-4 h-4 accent-white"> XL</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="S" disabled class="w-4 h-4"> S</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="M" disabled class="w-4 h-4"> M</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="L" disabled class="w-4 h-4"> L</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="XL" disabled class="w-4 h-4"> XL</label>
                     </div>
 
                     <div id="numeric-sizes" class="hidden grid grid-cols-4 gap-2 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="28" disabled class="w-4 h-4 accent-white"> 28</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="30" disabled class="w-4 h-4 accent-white"> 30</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="32" disabled class="w-4 h-4 accent-white"> 32</label>
-                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="34" disabled class="w-4 h-4 accent-white"> 34</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="28" disabled class="w-4 h-4"> 28</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="30" disabled class="w-4 h-4"> 30</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="32" disabled class="w-4 h-4"> 32</label>
+                        <label class="flex items-center gap-1.5 font-medium cursor-pointer"><input type="checkbox" name="sizes" value="34" disabled class="w-4 h-4"> 34</label>
                     </div>
 
                     <div id="custom-sizes-container" class="mt-2 grid grid-cols-2 gap-2 bg-white/10 p-2 rounded-xl border border-dashed border-white/30 hidden">
@@ -509,7 +534,7 @@
                 const container = document.getElementById('custom-sizes-container');
                 container.classList.remove('hidden');
                 const id = 's-' + Date.now();
-                container.innerHTML += `<label id="${id}" class="flex items-center gap-1 font-bold text-white bg-white/10 p-1.5 rounded border border-white/20"><input type="checkbox" name="sizes" value="${val}" checked class="accent-orange-600"> ${val} <button type="button" onclick="document.getElementById('${id}').remove()" class="ml-auto text-[10px]">❌</button></label>`;
+                container.innerHTML += `<label id="${id}" class="flex items-center gap-1 font-bold text-white bg-white/10 p-1.5 rounded border border-white/20"><input type="checkbox" name="sizes" value="${val}" checked class="w-4 h-4"> ${val} <button type="button" onclick="document.getElementById('${id}').remove()" class="ml-auto text-[10px]">❌</button></label>`;
                 closeSizePromptModal();
             }
         }
