@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 // --- FIXED CORS CONFIGURATION ---
 app.use(cors({
     origin: [
-        "https://sainiaasu79-creator.github.io" // Path (/nike-shop) hata diya hai, ab ye bilkul sahi hai
+        "https://sainiaasu79-creator.github.io"
     ],
     credentials: true
 }));
@@ -33,10 +33,11 @@ if (!fs.existsSync(uploadDir)){
 }
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
-// 📦 Multer Disk Storage for Images (Products and Payment Proofs)
+// 📦 Multer Disk Storage for Images (Products and Payment Proofs) - FIXED PATH
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/uploads/');
+        // Yahan path.join ka use kiya gaya hai taaki Render ko exact location mil sake
+        cb(null, path.join(__dirname, 'public/uploads'));
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
