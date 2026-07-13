@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nike Concept Store - My Orders (मेरे ऑर्डर)</title>
     
+    <!-- Config.js added here so it points to Render backend -->
+    <script src="config.js"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
@@ -181,11 +184,6 @@
     </footer>
 
     <script>
-        // API Base URL Setup
-        const API_BASE_URL = window.location.origin.includes(':5173') 
-            ? window.location.origin.replace(':5173', ':3000') 
-            : window.location.origin;
-
         let backendOrders = [];
         let activeFilter = 'all';
         let currentTargetCancelOrderId = null;
