@@ -562,11 +562,15 @@
             }
         }
 
+        // FIXED: was setting activeBlock.disabled instead of each input's disabled.
         function toggleSizeLayout(cat) {
             ['shoe-sizes', 'alpha-sizes', 'numeric-sizes'].forEach(id => {
                 const block = document.getElementById(id);
                 block.classList.add('hidden');
-                block.querySelectorAll('input').forEach(input => input.disabled = true);
+                block.querySelectorAll('input').forEach(input => {
+                    input.disabled = true;
+                    input.checked = false; // clear stale selections from a now-hidden block
+                });
             });
 
             let activeId = '';
@@ -576,7 +580,7 @@
 
             const activeBlock = document.getElementById(activeId);
             activeBlock.classList.remove('hidden');
-            activeBlock.querySelectorAll('input').forEach(input => activeBlock.disabled = false);
+            activeBlock.querySelectorAll('input').forEach(input => { input.disabled = false; });
         }
 
         function searchCatalogByTitle() {
@@ -613,6 +617,14 @@
             setTimeout(() => { overlay.style.opacity = '1'; img.style.transform = 'scale(1)'; }, 10);
             overlay.onclick = () => { overlay.style.opacity = '0'; img.style.transform = 'scale(0.9)'; setTimeout(() => overlay.remove(), 250); };
         }
+
+        // Run on load so the visible/enabled size block matches whatever the browser
+        // has selected for category — including bfcache-restored dropdown values,
+        // which don't fire onchange.
+        document.addEventListener('DOMContentLoaded', () => {
+            const catSelect = document.querySelector('select[name="category"]');
+            if (catSelect) toggleSizeLayout(catSelect.value);
+        });
     </script>
 </body>
 </html>
