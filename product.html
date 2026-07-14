@@ -50,36 +50,33 @@
             transform: translateX(120%);
         }
 
-
         .zoom-image{
-    transition:transform .3s;
-    cursor:zoom-in;
-}
+            transition:transform .3s;
+            cursor:zoom-in;
+        }
 
-.zoom-image:hover{
-    transform:scale(1.8);
-}
+        .zoom-image:hover{
+            transform:scale(1.8);
+        }
 
-.thumb{
-    width:70px;
-    height:70px;
-    object-fit:cover;
-    border-radius:10px;
-    cursor:pointer;
-    border:2px solid transparent;
-}
+        .thumb{
+            width:70px;
+            height:70px;
+            object-fit:cover;
+            border-radius:10px;
+            cursor:pointer;
+            border:2px solid transparent;
+        }
 
-.thumb.active{
-    border:2px solid white;
-}
+        .thumb.active{
+            border:2px solid white;
+        }
     </style>
 </head>
 <body class="bg-gradient-theme min-h-screen w-full flex flex-col justify-between p-4 md:p-8 text-white relative">
 
-    <!-- Unique Dynamic Notification Hub Area -->
     <div id="notification-popup-container"></div>
 
-    <!-- Header Navigation -->
     <header class="w-full flex justify-between items-center z-10 relative max-w-7xl mx-auto mb-6">
         <a href="index.html" class="w-10 h-auto fill-white cursor-pointer hover:opacity-80 transition">
             <svg viewBox="0 0 24 24"><path d="M21 6.5c-2.3 1.8-6.1 4.7-10.7 7.7-2.6 1.7-5.1 3.2-7.1 4.4-1.2.7-2.2 1.2-2.7 1.4-.3.1-.4.1-.5 0 0 0-.1-.1 0-.2.2-.6.7-1.7 1.5-3.3 1.7-3.4 4.5-8.2 8-12.7 1.4-1.8 2.8-3.1 3.9-3.7.8-.4 1.4-.4 1.7-.1.4.4.3 1.3-.3 2.6-1 2.2-3.1 5.4-5.6 8.7 3.9-2.2 8-4.3 11.5-5.6 1.3-.5 2.4-.8 3.1-.8.5 0 .8.2.9.5.1.4-.2 1.1-.7 1.7z"/></svg>
@@ -90,7 +87,6 @@
             <a href="contact.html" class="hover:opacity-70 opacity-60 transition">Contact</a>
         </nav>
         
-        <!-- Cart Toggle Button (Synced with Shop) -->
         <div id="cart-toggle-btn" onclick="handleCartToggleAction()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center border border-white/20 cursor-pointer transition-all relative">
             <svg class="w-5 h-5 stroke-white fill-none stroke-[2]" viewBox="0 0 24 24">
                 <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
@@ -100,29 +96,26 @@
         </div>
     </header>
 
-    <!-- Main Dynamic Content Wrapper -->
     <main class="w-full max-w-6xl mx-auto z-10 flex-grow flex flex-col gap-8 md:gap-12 opacity-0" id="main-content-area">
         
-        <!-- Top Half: Image Slider & Basic Actions -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
             
-            <!-- Image Style Slider Container -->
             <div class="w-full glassmorphism rounded-3xl p-4 border border-white/20 relative group">
-                <span class="absolute top-4 left-4 bg-red-600 text-[10px] font-black uppercase px-3 py-1 rounded-md z-20 tracking-wider shadow animate-pulse">🔥 Limited Offer</span>
+                <!-- UPDATE: Countdown Timer added here -->
+                <div class="absolute top-4 left-4 z-20 flex flex-col gap-1 pointer-events-none">
+                    <span class="bg-red-600 text-[10px] font-black uppercase px-3 py-1 rounded-md tracking-wider shadow animate-pulse w-fit">🔥 Limited Offer</span>
+                    <span id="countdown-timer" class="bg-black/50 backdrop-blur-md text-yellow-400 text-[10px] font-mono font-bold px-2 py-1 rounded border border-white/10 w-fit"></span>
+                </div>
                 
                 <div class="w-full h-72 md:h-96 rounded-2xl bg-black/10 overflow-hidden relative flex items-center justify-center">
                     <div id="product-media-render-box" class="w-full h-full flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar" onscroll="syncSliderDots(this)">
-                        <!-- Content injection dynamically -->
                     </div>
                 </div>
                 <div id="slider-dots-container" class="flex justify-center gap-1.5 mt-3"></div>
 
-                <div id="thumbnail-gallery"
-     class="flex gap-2 mt-4 overflow-x-auto no-scrollbar">
-</div>
+                <div id="thumbnail-gallery" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
             </div>
 
-            <!-- Meta Details Area -->
             <div class="flex flex-col gap-4 md:gap-5">
                 <div>
                     <span id="product-badge" class="text-[10px] uppercase font-bold tracking-widest bg-white/10 px-2.5 py-1 rounded-full border border-white/10">Category</span>
@@ -130,22 +123,19 @@
                     <p id="product-desc-paragraph" class="text-xs md:text-sm opacity-70 mt-1 leading-relaxed">Please wait while data finishes caching.</p>
                 </div>
 
-                <!-- Price and Savings Grid -->
+                <!-- UPDATE: Dynamic Price and Discount Grid -->
                 <div class="border-y border-white/10 py-3 flex items-center gap-4">
                     <span id="product-price-tag" class="text-2xl md:text-4xl font-black text-white">₹0</span>
-                    <span class="text-xs opacity-50 line-through mt-1.5" id="strike-price">₹0</span>
-                    <span class="text-xs bg-green-500/20 text-green-400 font-bold px-2 py-0.5 rounded border border-green-500/20">8% OFF</span>
+                    <span class="text-xs opacity-50 line-through mt-1.5 hidden" id="strike-price">₹0</span>
+                    <span id="product-discount-badge" class="text-xs bg-green-500/20 text-green-400 font-bold px-2 py-0.5 rounded border border-green-500/20 hidden"></span>
                 </div>
 
-                <!-- Size Selector Option Framework -->
                 <div class="flex flex-col gap-2 my-1">
                     <label class="text-xs font-bold uppercase opacity-60 tracking-wider">Select Available Size (आकार चुनें):</label>
                     <div id="product-size-buttons-shelf" class="flex flex-wrap gap-2">
-                        <!-- Size slots rendered dynamically -->
                     </div>
                 </div>
 
-                <!-- Action Button Controls -->
                 <div class="flex flex-col gap-3 mt-1">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <button onclick="handleAddToCartAction()" class="w-full py-3.5 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-neutral-100 transition duration-200 shadow-md">
@@ -157,7 +147,6 @@
                         </button>
                     </div>
                     
-                    <!-- Share Button Panel -->
                     <button onclick="executeShareSheet()" class="w-full py-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition flex items-center justify-center gap-1.5 text-xs font-bold">
                         🔗 <span>Share Product Link</span>
                     </button>
@@ -165,7 +154,6 @@
             </div>
         </section>
 
-        <!-- Advanced Reviews & Ratings Feature -->
         <section class="glassmorphism rounded-3xl p-6 border border-white/10 flex flex-col gap-6">
             <div>
                 <h2 class="text-lg md:text-xl font-extrabold tracking-tight">📊 Ratings & Customer Reviews</h2>
@@ -176,7 +164,7 @@
                 <div class="text-center flex flex-col items-center justify-center border-r border-white/10 last:border-r-0">
                     <p class="text-5xl font-black text-yellow-400" id="avg-rating-big">4.5</p>
                     <p class="text-xs mt-1 font-bold">★ ★ ★ ★ ☆</p>
-                    <p class="text-[10px] opacity-50 mt-0.5">Based on 142 reviews</p>
+                    <p class="text-[10px] opacity-50 mt-0.5" id="rating-count-text">Based on reviews</p>
                 </div>
                 
                 <div class="sm:col-span-2 flex flex-col gap-1.5 text-xs">
@@ -189,7 +177,6 @@
             </div>
         </section>
 
-        <!-- Infinite Loop Related Grid View -->
         <section class="flex flex-col gap-4">
             <div>
                 <h2 class="text-lg md:text-xl font-extrabold tracking-tight">✨ Related Products ( संबंधित उत्पाद )</h2>
@@ -197,24 +184,21 @@
             </div>
             
             <div id="infinite-related-products-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-                <!-- Looping dynamic cards inject here -->
             </div>
         </section>
     </main>
 
-    <!-- Footer Meta -->
     <footer class="w-full flex justify-between text-[9px] tracking-widest uppercase opacity-40 z-10 pt-8 max-w-7xl mx-auto">
         <div>© 2026 Nike Store Automation</div>
         <div>Continuous Discovery Loop Active</div>
     </footer>
 
-    <!-- Logic Controller Scripts -->
     <script>
         let globalAllProducts = [];
         let activeProductDetails = null;
         let selectedProductSize = null;
+        let countdownInterval;
 
-        // Clean Dynamic Popup Module System
         function showUniquePopupNotification(message, isWarning = false) {
             const container = document.getElementById('notification-popup-container');
             const popup = document.createElement('div');
@@ -233,7 +217,6 @@
             }, 3500);
         }
 
-        // Real-time Sync with LocalStorage Cart 
         function updateCartBadgeCounter() {
             let currentCart = JSON.parse(localStorage.getItem('cart')) || [];
             const totalQty = currentCart.reduce((acc, item) => acc + (item.quantity || 1), 0);
@@ -243,6 +226,27 @@
         function extractProductIdFromUrl() {
             const params = new URLSearchParams(window.location.search);
             return params.get('id'); 
+        }
+
+        // UPDATE: Countdown Timer Logic
+        function startDynamicCountdown(productId) {
+            clearInterval(countdownInterval);
+            const idSum = String(productId).split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            let timeLeft = (idSum * 73) % 86400; // max 24 hours
+            if(timeLeft < 3600) timeLeft += 14400; // Minimum 4 hours
+
+            const timerEl = document.getElementById('countdown-timer');
+            
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) timeLeft = 86400; 
+                
+                const h = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+                const m = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+                const s = (timeLeft % 60).toString().padStart(2, '0');
+                
+                timerEl.innerText = `Ends in: ${h}:${m}:${s}`;
+            }, 1000);
         }
 
         async function initializeProductDetailsEngine(targetId) {
@@ -277,10 +281,42 @@
         function renderActiveProductDom(item) {
             document.getElementById('product-title-heading').innerText = item.title;
             document.getElementById('product-desc-paragraph').innerText = item.description || 'No descriptive statement specified for this edition asset.';
-            document.getElementById('product-price-tag').innerText = `₹${item.price}`;
-            document.getElementById('strike-price').innerText = `₹${Math.round(item.price * 1.15)}`;
             document.getElementById('product-badge').innerText = `Category: ${item.category || 'Footwear'}`;
-            document.getElementById('avg-rating-big').innerText = item.rating || '4.2';
+            
+            // UPDATE: Unique Rating Generation
+            const idHash = String(item._id).split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            let prRating = item.rating;
+            if(!prRating) {
+                prRating = (3.8 + (idHash % 12) / 10).toFixed(1); 
+            }
+            document.getElementById('avg-rating-big').innerText = prRating;
+            document.getElementById('rating-count-text').innerText = `Based on ${50 + (idHash % 250)} reviews`;
+
+            // UPDATE: Dynamic Price & Discount Setup
+            const basePrice = Number(item.price) || 0;
+            const discountPercent = Number(item.discount) || 0;
+            const finalPrice = discountPercent > 0 ? Math.round(basePrice - (basePrice * discountPercent / 100)) : basePrice;
+
+            document.getElementById('product-price-tag').innerText = `₹${finalPrice}`;
+            
+            const strikePriceEl = document.getElementById('strike-price');
+            const discountBadgeEl = document.getElementById('product-discount-badge');
+
+            if (discountPercent > 0) {
+                strikePriceEl.innerText = `₹${basePrice}`;
+                strikePriceEl.classList.remove('hidden');
+                strikePriceEl.style.display = 'inline-block';
+                
+                discountBadgeEl.innerText = `${discountPercent}% OFF`;
+                discountBadgeEl.classList.remove('hidden');
+            } else {
+                strikePriceEl.classList.add('hidden');
+                strikePriceEl.style.display = 'none';
+                discountBadgeEl.classList.add('hidden');
+            }
+
+            // Start specific countdown timer
+            startDynamicCountdown(item._id);
 
             const mediaBox = document.getElementById('product-media-render-box');
             const dotsBox = document.getElementById('slider-dots-container');
@@ -290,57 +326,34 @@
             const imageList = Array.isArray(item.images) && item.images.length > 0 ? item.images : [item.image || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600'];
             
             const thumbBox=document.getElementById("thumbnail-gallery");
-thumbBox.innerHTML="";
+            thumbBox.innerHTML="";
 
-imageList.forEach((imgUrl,index)=>{
+            imageList.forEach((imgUrl,index)=>{
+                const finalUrl=imgUrl.startsWith("http") ? imgUrl : `${API_BASE_URL}${imgUrl}`;
 
-    const finalUrl=imgUrl.startsWith("http")
-        ?imgUrl
-        :`${API_BASE_URL}${imgUrl}`;
+                mediaBox.innerHTML+=`
+                <div class="w-full h-full flex-shrink-0 snap-center flex items-center justify-center p-4">
+                    <img src="${finalUrl}" class="zoom-image max-w-full max-h-full object-contain rounded-xl"/>
+                </div>
+                `;
 
-    mediaBox.innerHTML+=`
+                dotsBox.innerHTML+=`
+                <div class="w-1.5 h-1.5 rounded-full bg-white ${index==0?'opacity-100 scale-125':'opacity-40'}"></div>
+                `;
 
-    <div class="w-full h-full flex-shrink-0 snap-center flex items-center justify-center p-4">
+                thumbBox.innerHTML+=`
+                    <img src="${finalUrl}" class="thumb ${index==0?'active':''}" onclick="changeImage(${index})">
+                `;
+            });
 
-        <img src="${finalUrl}"
-             class="zoom-image max-w-full max-h-full object-contain rounded-xl"/>
-
-    </div>
-    `;
-
-    dotsBox.innerHTML+=`
-    <div class="w-1.5 h-1.5 rounded-full bg-white ${index==0?'opacity-100 scale-125':'opacity-40'}"></div>
-    `;
-
-    thumbBox.innerHTML+=`
-        <img src="${finalUrl}"
-             class="thumb ${index==0?'active':''}"
-             onclick="changeImage(${index})">
-    `;
-});
-
-window.changeImage=function(index){
-
-    const slider=document.getElementById("product-media-render-box");
-
-    slider.scrollTo({
-
-        left:index*slider.clientWidth,
-
-        behavior:"smooth"
-
-    });
-
-    document.querySelectorAll(".thumb").forEach((t,i)=>{
-
-        if(i==index)
-            t.classList.add("active");
-        else
-            t.classList.remove("active");
-
-    });
-
-}
+            window.changeImage=function(index){
+                const slider=document.getElementById("product-media-render-box");
+                slider.scrollTo({ left:index*slider.clientWidth, behavior:"smooth" });
+                document.querySelectorAll(".thumb").forEach((t,i)=>{
+                    if(i==index) t.classList.add("active");
+                    else t.classList.remove("active");
+                });
+            }
 
             const sizeShelf = document.getElementById('product-size-buttons-shelf');
             sizeShelf.innerHTML = '';
@@ -359,15 +372,12 @@ window.changeImage=function(index){
             });
         }
 
-        // Error fixed here by moving 'index' calculation to the top of the function
         function syncSliderDots(scroller) {
             const index = Math.round(scroller.scrollLeft / scroller.clientWidth);
             
             document.querySelectorAll(".thumb").forEach((t,i)=>{
-                if(i===index)
-                    t.classList.add("active");
-                else
-                    t.classList.remove("active");
+                if(i===index) t.classList.add("active");
+                else t.classList.remove("active");
             });
             
             const dots = document.querySelectorAll('#slider-dots-container div');
@@ -396,6 +406,12 @@ window.changeImage=function(index){
                 const imgSource = Array.isArray(product.images) ? product.images[0] : product.image;
                 const finalImg = imgSource && imgSource.startsWith('http') ? imgSource : `${API_BASE_URL}${imgSource || ''}`;
 
+                // UPDATE: Apply dynamic pricing & rating to related products too
+                const discountPercent = Number(product.discount) || 0;
+                const finalPrice = discountPercent > 0 ? Math.round(product.price - (product.price * discountPercent / 100)) : product.price;
+                const idHash = String(product._id).split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+                let relRating = product.rating || (3.8 + (idHash % 12) / 10).toFixed(1);
+
                 const card = document.createElement('div');
                 card.className = "product-card p-2.5 rounded-2xl flex flex-col justify-between gap-2 cursor-pointer";
                 card.setAttribute('onclick', `shiftActiveProductView('${product._id}')`);
@@ -403,13 +419,13 @@ window.changeImage=function(index){
                 card.innerHTML = `
                     <div class="w-full h-28 sm:h-36 rounded-xl bg-white/5 flex items-center justify-center p-2 relative overflow-hidden">
                         <img src="${finalImg}" class="max-w-full max-h-full object-contain" onerror="this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400'"/>
-                        <span class="absolute bottom-1 right-1 text-[8px] opacity-40">★ 4.2</span>
+                        <span class="absolute bottom-1 right-1 text-[8px] opacity-40">★ ${relRating}</span>
                     </div>
                     <div>
                         <h4 class="text-xs font-bold truncate">${product.title}</h4>
                         <div class="flex items-center justify-between mt-1">
-                            <span class="text-xs font-black text-white">₹${product.price}</span>
-                            <span class="text-[9px] text-green-400 font-bold">Offer</span>
+                            <span class="text-xs font-black text-white">₹${finalPrice}</span>
+                            ${discountPercent > 0 ? `<span class="text-[9px] text-green-400 font-bold">${discountPercent}% Off</span>` : ''}
                         </div>
                     </div>
                 `;
@@ -425,7 +441,6 @@ window.changeImage=function(index){
             }});
         };
 
-        // Complete LocalStorage Multi-Page Insertion Engine
         window.handleAddToCartAction = function() {
             if (!selectedProductSize) {
                 showUniquePopupNotification("Kripya product ko cart me dalne se pehle size select karein!", true);
@@ -434,17 +449,19 @@ window.changeImage=function(index){
 
             let currentCart = JSON.parse(localStorage.getItem('cart')) || [];
             
-            // Build the detailed item object payload
+            // UPDATE: Saving actual discounted price to cart
+            const discountPercent = Number(activeProductDetails.discount) || 0;
+            const finalPriceToSave = discountPercent > 0 ? Math.round(activeProductDetails.price - (activeProductDetails.price * discountPercent / 100)) : activeProductDetails.price;
+
             const productPayload = {
                 _id: activeProductDetails._id,
                 title: activeProductDetails.title,
-                price: activeProductDetails.price,
+                price: finalPriceToSave,
                 size: selectedProductSize,
                 image: activeProductDetails.image || (Array.isArray(activeProductDetails.images) ? activeProductDetails.images[0] : ''),
                 quantity: 1
             };
 
-            // Avoid duplicating exact same item with same size configuration
             const itemExistIndex = currentCart.findIndex(item => item._id === productPayload._id && item.size === productPayload.size);
             if(itemExistIndex > -1) {
                 currentCart[itemExistIndex].quantity += 1;
@@ -476,7 +493,6 @@ window.changeImage=function(index){
         };
 
         window.handleCartToggleAction = function() {
-            // Safe cross route shifting fallback if sidebar dashboard layout is missing inside detail shell
             window.location.href = "shop.html?openCart=true";
         };
 
